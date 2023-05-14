@@ -1,12 +1,11 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
-import 'package:we_chat/screens/home_screen.dart';
+import 'package:we_chat/screens/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,14 +21,17 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       //exit full-screen
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-      SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(systemNavigationBarColor: Colors.white, statusBarColor: Colors.white));
+      SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.white,
+          statusBarColor: Colors.white));
 
       if (APIs.auth.currentUser != null) {
         log('\nUser: ${APIs.auth.currentUser}');
-        //navigator to home screen
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+        APIs.getSelfInfo().then((value) {
+          //navigator to home screen
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (_) => const MainScreen()));
+        });
       } else {
         //navigator to login screen
         Navigator.pushReplacement(

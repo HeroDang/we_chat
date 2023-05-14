@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/helper/dialog.dart';
 import 'package:we_chat/main.dart';
-import 'package:we_chat/screens/home_screen.dart';
+import 'package:we_chat/screens/main_screen.dart';
 
 import '../../api/apis.dart';
 
@@ -43,12 +43,16 @@ class _LoginScreenState extends State<LoginScreen> {
         log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
 
         if ((await APIs.userExists())) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+          APIs.getSelfInfo().then((value) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => const MainScreen()));
+          });
         } else {
           await APIs.createUser().then((value) {
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (_) => const HomeScreen()));
+            APIs.getSelfInfo().then((value) {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (_) => const MainScreen()));
+            });
           });
         }
       }

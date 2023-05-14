@@ -1,19 +1,9 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:we_chat/helper/dialog.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
-import 'package:we_chat/screens/auth/login_screen.dart';
-
-import '../api/apis.dart';
 
 //view profiles screen -- to view profile of user
 class ViewProfileScreen extends StatefulWidget {
@@ -49,7 +39,9 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
               ),
               Text(
                   MyDateUtil.getLastMessageTime(
-                      context: context, time: widget.user.createdAt, showYear: true),
+                      context: context,
+                      time: widget.user.createdAt,
+                      showYear: true),
                   style: TextStyle(color: Colors.black54, fontSize: 16)),
             ],
           ),

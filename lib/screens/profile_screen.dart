@@ -57,7 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.pop(context);
 
                     //for moving to homes screen
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
 
                     APIs.auth = FirebaseAuth.instance;
 

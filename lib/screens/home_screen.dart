@@ -1,17 +1,14 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:we_chat/helper/dialog.dart';
-import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
-import 'package:we_chat/screens/profile_screen.dart';
+import 'package:we_chat/screens/search_screen.dart';
 import 'package:we_chat/widgets/chat_user_card.dart';
 
-import '../api/apis.dart';
+import '../../api/apis.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,13 +17,16 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   // for storing all user
   List<ChatUser> _list = [];
   // for storing searched item
   final List<ChatUser> _searchList = [];
   // for storing search status
   bool _isSearching = false;
+
+  // late TabController _tabController;
 
   @override
   void initState() {
@@ -51,6 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    // _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       // for hiding keyboard when a tap is detected on screen
@@ -66,136 +72,138 @@ class _HomeScreenState extends State<HomeScreen> {
             return Future.value(true);
           }
         },
-        child: Scaffold(
-            //app bar
-            appBar: AppBar(
-              leading: Icon(CupertinoIcons.home),
-              title: _isSearching
-                  ? TextField(
-                      decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Name, Email, ...'),
-                      autofocus: true,
-                      style: const TextStyle(fontSize: 17, letterSpacing: 0.5),
-                      // when search text changes then updated search list
-                      onChanged: (val) {
-                        // search logic
-                        _searchList.clear();
+        child: SafeArea(
+          child: DefaultTabController(
+            length: 3,
+            child: Scaffold(
+                backgroundColor: Colors.white,
+                //app bar
 
-                        for (var i in _list) {
-                          if (i.name
-                                  .toLowerCase()
-                                  .contains(val.toLowerCase()) ||
-                              i.email
-                                  .toLowerCase()
-                                  .contains(val.toLowerCase())) {
-                            _searchList.add(i);
-                          }
-                          setState(() {
-                            _searchList;
-                          });
-                        }
-                      },
-                    )
-                  : const Text('We Chat'),
-              actions: [
-                //search user button
-                IconButton(
+                //floating button to add new user
+                floatingActionButton: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: FloatingActionButton(
                     onPressed: () {
-                      setState(() {
-                        _isSearching = !_isSearching;
-                      });
+                      _addChatUserDialog();
                     },
-                    icon: Icon(_isSearching
-                        ? CupertinoIcons.clear_circled_solid
-                        : Icons.search)),
+                    child: const Icon(Icons.add_comment_rounded),
+                  ),
+                ),
+                body: Column(
+                  children: [
+                    Container(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                        child: _searchBtn()),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: TabBar(
+                        unselectedLabelColor: Colors.black,
+                        labelColor: Color(0xFF5E88DA),
+                        unselectedLabelStyle: TextStyle(fontFamily: 'Poppins', fontSize: 18),
+                        labelStyle:
+                            TextStyle(fontFamily: 'PoppinsSemiBold', fontSize: 18),
+                        tabs: [
+                          Tab(
+                            text: 'Chats',
+                          ),
+                          Tab(
+                            text: 'Friends',
+                          ),
+                          Tab(
+                            text: 'Calls',
+                          )
+                        ],
+                        // controller: _tabController,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        indicatorColor: Color(0xFFF1F1F1),
+                        indicatorWeight: 4,
+                        indicatorPadding: EdgeInsets.symmetric(vertical: 8),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        child: TabBarView(
+                          children: [
+                            StreamBuilder(
+                              stream: APIs.getMyUsersId(),
 
-                //more features button
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => ProfileScreen(user: APIs.me)));
-                    },
-                    icon: const Icon(Icons.person_2_outlined)),
-              ],
-            ),
+                              //get id of only know user
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  //if data is loading
+                                  case ConnectionState.waiting:
+                                  case ConnectionState.none:
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
 
-            //floating button to add new user
-            floatingActionButton: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: FloatingActionButton(
-                onPressed: () {
-                  _addChatUserDialog();
-                },
-                child: const Icon(Icons.add_comment_rounded),
-              ),
-            ),
-            body: StreamBuilder(
-              stream: APIs.getMyUsersId(),
+                                  //if some or all data is loaded then show it
+                                  case ConnectionState.active:
+                                  case ConnectionState.done:
+                                    return StreamBuilder(
+                                      stream: APIs.getAllUsers(snapshot
+                                              .data?.docs
+                                              .map((e) => e.id)
+                                              .toList() ??
+                                          []),
 
-              //get id of only know user
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  //if data is loading
-                  case ConnectionState.waiting:
-                  case ConnectionState.none:
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+                                      //get only those user, who's ids are provide
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          //if data is loading
+                                          case ConnectionState.waiting:
+                                          case ConnectionState.none:
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
 
-                  //if some or all data is loaded then show it 
-                  case ConnectionState.active:
-                  case ConnectionState.done:
-                    return StreamBuilder(
-                      stream: APIs.getAllUsers(
-                          snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                                          //if some or all data is loaded then show it
+                                          case ConnectionState.active:
+                                          case ConnectionState.done:
+                                            final data = snapshot.data?.docs;
+                                            _list = data
+                                                    ?.map((e) =>
+                                                        ChatUser.fromJson(
+                                                            e.data()))
+                                                    .toList() ??
+                                                [];
 
-                      //get only those user, who's ids are provide
-                      builder: (context, snapshot) {
-                        switch (snapshot.connectionState) {
-                          //if data is loading
-                          case ConnectionState.waiting:
-                          case ConnectionState.none:
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-
-                          //if some or all data is loaded then show it
-                          case ConnectionState.active:
-                          case ConnectionState.done:
-                            final data = snapshot.data?.docs;
-                            _list = data
-                                    ?.map((e) => ChatUser.fromJson(e.data()))
-                                    .toList() ??
-                                [];
-
-                            if (_list.isNotEmpty) {
-                              return ListView.builder(
-                                itemCount: _isSearching
-                                    ? _searchList.length
-                                    : _list.length,
-                                padding: EdgeInsets.only(top: mq.height * .01),
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return ChatUserCard(
-                                      user: _isSearching
-                                          ? _searchList[index]
-                                          : _list[index]);
-                                },
-                              );
-                            } else {
-                              return const Center(
-                                  child: Text('No Connections Found',
-                                      style: TextStyle(fontSize: 20)));
-                            }
-                        }
-                      },
-                    );
-                }
-              },
-            )),
+                                            if (_list.isNotEmpty) {
+                                              return ListView.builder(
+                                                itemCount: _list.length,
+                                                physics:
+                                                    BouncingScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  return ChatUserCard(
+                                                      user: _list[index]);
+                                                },
+                                              );
+                                            } else {
+                                              return const Center(
+                                                  child: Text(
+                                                      'No Connections Found',
+                                                      style: TextStyle(
+                                                          fontSize: 20)));
+                                            }
+                                        }
+                                      },
+                                    );
+                                }
+                              },
+                            ),
+                            Text('Person'),
+                            Text('Person')
+                          ],
+                          // controller: _tabController,
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          ),
+        ),
       ),
     );
   }
@@ -268,5 +276,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ));
+  }
+
+  Widget _searchBtn() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => SearchScreen()));
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+            color: Color(0xFFF1F1F1), borderRadius: BorderRadius.circular(24)),
+        child: Row(
+          children: [
+            Icon(CupertinoIcons.search),
+            SizedBox(width: 8),
+            Text(
+              'Search',
+              style: const TextStyle(
+                color: Color(0xFF252525),
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                letterSpacing: 0.5,
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

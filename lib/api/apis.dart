@@ -327,4 +327,15 @@ class APIs {
         .doc(message.sent)
         .update({'msg': updateMsg});
   }
+
+  //count unread messages
+  static Future<int> countUnreadMessages(ChatUser user) async {
+    final querySnapshot = await firestore
+        .collection('chats/${getConversationID(user.id)}/messages/')
+        .where('read', isEqualTo: '').get();
+
+    final unreadCount = querySnapshot.size;
+
+    return unreadCount;
+  }
 }

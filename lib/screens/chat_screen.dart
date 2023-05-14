@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -12,9 +11,9 @@ import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/models/message.dart';
 import 'package:we_chat/screens/view_profile_screen.dart';
 
-import '../api/apis.dart';
-import '../main.dart';
-import '../widgets/message_cart.dart';
+import '../../api/apis.dart';
+import '../../main.dart';
+import '../../widgets/message_cart.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatUser user;
