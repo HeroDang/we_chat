@@ -37,19 +37,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
     _signInWithGoogle().then((user) async {
       //for hiding progress bar
-      Navigator.pop(context);
+      // Navigator.pop(context);
       if (user != null) {
         log('\nUser: ${user.user}');
         log('\nUserAdditionalInfo: ${user.additionalUserInfo}');
 
         if ((await APIs.userExists())) {
           APIs.getSelfInfo().then((value) {
+            //for hiding progress bar
+            Navigator.pop(context);
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (_) => const MainScreen()));
           });
         } else {
           await APIs.createUser().then((value) {
             APIs.getSelfInfo().then((value) {
+              //for hiding progress bar
+              Navigator.pop(context);
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (_) => const MainScreen()));
             });
