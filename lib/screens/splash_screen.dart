@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:we_chat/api/apis.dart';
 import 'package:we_chat/main.dart';
+import 'package:we_chat/screens/Get_started_screen.dart';
 import 'package:we_chat/screens/auth/login_screen.dart';
 import 'package:we_chat/screens/main_screen.dart';
 
@@ -35,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         //navigator to login screen
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+            context, MaterialPageRoute(builder: (_) => const GetStartedScreen()));
       }
 
       // //navigator to login screen
