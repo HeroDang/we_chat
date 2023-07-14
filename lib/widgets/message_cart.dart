@@ -23,153 +23,306 @@ class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
-    return InkWell(
-      onLongPress: () {
-        _showBottomSheet(isMe);
-      },
-      child: isMe ? _greenMessage() : _blueMessage(),
+    return Container(
+      child: isMe ? _roundedMessage() : _outlineMessage(),
     );
+    // return InkWell(
+    //   onLongPress: () {
+    //     _showBottomSheet(isMe);
+    //   },
+    //   child: isMe ? _roundedMessage() : _outlineMessage(),
+    // );
   }
 
   //sender or another user message
-  Widget _blueMessage() {
+  Widget _outlineMessage() {
     //update last read message if sender and receiver are difference are difference
     if (widget.message.read.isEmpty) {
       APIs.updateMessageReadStatus(widget.message);
     }
 
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      //message content
-      Flexible(
-        child: Container(
-          padding: EdgeInsets.all(widget.message.type == Type.image
-              ? mq.width * .03
-              : mq.width * .04),
-          margin: EdgeInsets.symmetric(
-              horizontal: mq.width * .04, vertical: mq.height * .01),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 221, 245, 255),
-              border: Border.all(color: Colors.lightBlue),
-              //making borders radius
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomRight: Radius.circular(30))),
-          child: widget.message.type == Type.text
-              ?
-              //show text
-              Text(
-                  widget.message.msg,
-                  style: TextStyle(fontSize: 15, color: Colors.black87),
-                )
-              :
-              //shw image
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.message.msg,
-                    placeholder: (context, url) => const Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
+    return Container(
+      margin: EdgeInsets.symmetric(
+          horizontal: mq.width * .04, vertical: mq.height * .01),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        //message content
+        Container(
+            constraints: BoxConstraints(maxWidth: mq.width * .7),
+            padding: EdgeInsets.all(
+                widget.message.type == Type.image ? 0 : mq.width * .04),
+            decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF5E88DA)),
+                //making borders radius
+                borderRadius: const BorderRadius.all(Radius.circular(16))),
+            child: InkWell(
+              onLongPress: () {
+                _showBottomSheet(APIs.user.uid == widget.message.fromId);
+              },
+              child: widget.message.type == Type.text
+                  ?
+                  //show text
+                  Text(
+                      widget.message.msg,
+                      style: TextStyle(fontSize: 15, color: Colors.black87),
+                    )
+                  :
+                  //shw image
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.message.msg,
+                        placeholder: (context, url) => const Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const CircleAvatar(
+                          child: Icon(Icons.image, size: 70),
+                        ),
                       ),
                     ),
-                    errorWidget: (context, url, error) => const CircleAvatar(
-                      child: Icon(Icons.image, size: 70),
-                    ),
-                  ),
-                ),
-        ),
-      ),
+            )),
 
-      //message time
-      Padding(
-        padding: EdgeInsets.only(right: mq.width * .04),
-        child: Text(
-          MyDateUtil.getMessageTime(
-              context: context, time: widget.message.sent),
-          style: const TextStyle(fontSize: 13, color: Colors.black54),
-        ),
-      ),
-    ]);
-  }
-
-  //our or user message
-  Widget _greenMessage() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      //message time
-      Row(
-        children: [
-          // for adding some space
-          SizedBox(
-            width: mq.width * .04,
-          ),
-
-          //double tick blue icon for message read
-          if (widget.message.read.isNotEmpty)
-            const Icon(
-              Icons.done_all_rounded,
-              color: Colors.blue,
-              size: 20,
-            ),
-
-          //for adding some space
-          const SizedBox(
-            width: 2,
-          ),
-
-          //read time
-          Text(
+        //message time
+        Container(
+          decoration: BoxDecoration(
+              color: Color(0xFFF1F1F1), borderRadius: BorderRadius.circular(7)),
+          padding: EdgeInsets.all(4),
+          margin: EdgeInsets.only(top: 4),
+          child: Text(
             MyDateUtil.getMessageTime(
                 context: context, time: widget.message.sent),
             style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
+        ),
+      ]),
+    );
+
+    // return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    //   //message content
+    //   Flexible(
+    //     child: Container(
+    //       padding: EdgeInsets.all(widget.message.type == Type.image
+    //           ? mq.width * .03
+    //           : mq.width * .04),
+    //       margin: EdgeInsets.symmetric(
+    //           horizontal: mq.width * .04, vertical: mq.height * .01),
+    //       decoration: BoxDecoration(
+    //           color: Color.fromARGB(255, 221, 245, 255),
+    //           border: Border.all(color: Colors.lightBlue),
+    //           //making borders radius
+    //           borderRadius: const BorderRadius.only(
+    //               topLeft: Radius.circular(30),
+    //               topRight: Radius.circular(30),
+    //               bottomRight: Radius.circular(30))),
+    //       child: widget.message.type == Type.text
+    //           ?
+    //           //show text
+    //           Text(
+    //               widget.message.msg,
+    //               style: TextStyle(fontSize: 15, color: Colors.black87),
+    //             )
+    //           :
+    //           //shw image
+    //           ClipRRect(
+    //               borderRadius: BorderRadius.circular(15),
+    //               child: CachedNetworkImage(
+    //                 imageUrl: widget.message.msg,
+    //                 placeholder: (context, url) => const Padding(
+    //                   padding: const EdgeInsets.all(8.0),
+    //                   child: const CircularProgressIndicator(
+    //                     strokeWidth: 2,
+    //                   ),
+    //                 ),
+    //                 errorWidget: (context, url, error) => const CircleAvatar(
+    //                   child: Icon(Icons.image, size: 70),
+    //                 ),
+    //               ),
+    //             ),
+    //     ),
+    //   ),
+
+    //   //message time
+    //   Padding(
+    //     padding: EdgeInsets.only(right: mq.width * .04),
+    //     child: Text(
+    //       MyDateUtil.getMessageTime(
+    //           context: context, time: widget.message.sent),
+    //       style: const TextStyle(fontSize: 13, color: Colors.black54),
+    //     ),
+    //   ),
+    // ]);
+  }
+
+  //our or user message
+  Widget _roundedMessage() {
+    return Container(
+      margin: EdgeInsets.symmetric(
+          horizontal: mq.width * .04, vertical: mq.height * .01),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+              constraints: BoxConstraints(maxWidth: mq.width * .7),
+              padding: EdgeInsets.all(
+                  widget.message.type == Type.image ? 0 : mq.width * .04),
+              decoration: BoxDecoration(
+                  color: Color(0xFF5E88DA),
+                  //making borders radius
+                  borderRadius: const BorderRadius.all(Radius.circular(16))),
+              child: InkWell(
+                onLongPress: () {
+                  _showBottomSheet(APIs.user.uid == widget.message.fromId);
+                },
+                child: widget.message.type == Type.text
+                    ?
+                    //show text
+                    Text(
+                        widget.message.msg,
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                            fontFamily: 'Poppins'),
+                      )
+                    :
+                    //show image
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.message.msg,
+                          placeholder: (context, url) => const Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const CircleAvatar(
+                            child: Icon(Icons.image, size: 70),
+                          ),
+                        ),
+                      ),
+              )),
+
+          ////message time
+          UnconstrainedBox(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Color(0xFFF1F1F1),
+                  borderRadius: BorderRadius.circular(7)),
+              padding: EdgeInsets.all(4),
+              margin: EdgeInsets.only(top: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  //read time
+                  Text(
+                    MyDateUtil.getMessageTime(
+                        context: context, time: widget.message.sent),
+                    style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black54,
+                        fontFamily: 'Poppins'),
+                  ),
+
+                  //for adding some space
+                  const SizedBox(
+                    width: 2,
+                  ),
+
+                  //double tick blue icon for message read
+                  if (widget.message.read.isNotEmpty)
+                    const Icon(
+                      Icons.check_circle_outline,
+                      color: Color(0xFF7EBD4C),
+                      size: 20,
+                    ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
+    );
 
-      //message content
-      Flexible(
-        child: Container(
-          padding: EdgeInsets.all(widget.message.type == Type.image
-              ? mq.width * .03
-              : mq.width * .04),
-          margin: EdgeInsets.symmetric(
-              horizontal: mq.width * .04, vertical: mq.height * .01),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, 218, 255, 176),
-              border: Border.all(color: Colors.lightGreen),
-              //making borders radius
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30))),
-          child: widget.message.type == Type.text
-              ?
-              //show text
-              Text(
-                  widget.message.msg,
-                  style: TextStyle(fontSize: 15, color: Colors.black87),
-                )
-              :
-              //shw image
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.message.msg,
-                    placeholder: (context, url) => const Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    errorWidget: (context, url, error) => const CircleAvatar(
-                      child: Icon(Icons.image, size: 70),
-                    ),
-                  ),
-                ),
-        ),
-      ),
-    ]);
+    // return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    //   //message time
+    //   Row(
+    //     children: [
+    //       // for adding some space
+    //       SizedBox(
+    //         width: mq.width * .04,
+    //       ),
+
+    //       //double tick blue icon for message read
+    //       if (widget.message.read.isNotEmpty)
+    //         const Icon(
+    //           Icons.done_all_rounded,
+    //           color: Colors.blue,
+    //           size: 20,
+    //         ),
+
+    //       //for adding some space
+    //       const SizedBox(
+    //         width: 2,
+    //       ),
+
+    //       //read time
+    //       Text(
+    //         MyDateUtil.getMessageTime(
+    //             context: context, time: widget.message.sent),
+    //         style: const TextStyle(
+    //             fontSize: 13, color: Colors.black54, fontFamily: 'Poppins'),
+    //       ),
+    //     ],
+    //   ),
+
+    //   //message content
+    //   Flexible(
+    //     child: Container(
+    //       padding: EdgeInsets.all(widget.message.type == Type.image
+    //           ? mq.width * .03
+    //           : mq.width * .04),
+    //       margin: EdgeInsets.symmetric(
+    //           horizontal: mq.width * .04, vertical: mq.height * .01),
+    //       decoration: BoxDecoration(
+    //           color: Color(0xFF5E88DA),
+    //           // border: Border.all(color: Colors.lightGreen),
+    //           //making borders radius
+    //           borderRadius: const BorderRadius.all(Radius.circular(16))),
+    //       child: widget.message.type == Type.text
+    //           ?
+    //           //show text
+    //           Text(
+    //               widget.message.msg,
+    //               style: TextStyle(
+    //                   fontSize: 15,
+    //                   color: Colors.white,
+    //                   fontFamily: 'Poppins'),
+    //             )
+    //           :
+    //           //shw image
+    //           ClipRRect(
+    //               borderRadius: BorderRadius.circular(15),
+    //               child: CachedNetworkImage(
+    //                 imageUrl: widget.message.msg,
+    //                 placeholder: (context, url) => const Padding(
+    //                   padding: const EdgeInsets.all(8.0),
+    //                   child: const CircularProgressIndicator(
+    //                     strokeWidth: 2,
+    //                   ),
+    //                 ),
+    //                 errorWidget: (context, url, error) =>
+    //                     const CircleAvatar(
+    //                   child: Icon(Icons.image, size: 70),
+    //                 ),
+    //               ),
+    //             ),
+    //     ),
+    //   ),
+    // ]);
   }
 
   void _showBottomSheet(bool isMe) {
