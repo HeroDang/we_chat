@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:we_chat/helper/dialog.dart';
 import 'package:we_chat/models/chat_user.dart';
+import 'package:we_chat/screens/friends_screen.dart';
 import 'package:we_chat/screens/search_screen.dart';
+import 'package:we_chat/widgets/call_user_cart.dart';
 import 'package:we_chat/widgets/chat_user_card.dart';
+import 'package:we_chat/widgets/user_card.dart';
 
 import '../../api/apis.dart';
 
@@ -193,8 +196,135 @@ class _HomeScreenState extends State<HomeScreen>
                                 }
                               },
                             ),
-                            Text('Person'),
-                            Text('Person')
+                            StreamBuilder(
+                              stream: APIs.getMyUsersId(),
+
+                              //get id of only know user
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  //if data is loading
+                                  case ConnectionState.waiting:
+                                  case ConnectionState.none:
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+
+                                  //if some or all data is loaded then show it
+                                  case ConnectionState.active:
+                                  case ConnectionState.done:
+                                    return StreamBuilder(
+                                      stream: APIs.getAllUsers(snapshot
+                                              .data?.docs
+                                              .map((e) => e.id)
+                                              .toList() ??
+                                          []),
+
+                                      //get only those user, who's ids are provide
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          //if data is loading
+                                          case ConnectionState.waiting:
+                                          case ConnectionState.none:
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+
+                                          //if some or all data is loaded then show it
+                                          case ConnectionState.active:
+                                          case ConnectionState.done:
+                                            final data = snapshot.data?.docs;
+                                            _list = data
+                                                    ?.map((e) =>
+                                                        ChatUser.fromJson(
+                                                            e.data()))
+                                                    .toList() ??
+                                                [];
+
+                                            if (_list.isNotEmpty) {
+                                              return FriendsScreen(listUser: _list);
+                                            } else {
+                                              return const Center(
+                                                  child: Text(
+                                                      'No Connections Found',
+                                                      style: TextStyle(
+                                                          fontSize: 20)));
+                                            }
+                                        }
+                                      },
+                                    );
+                                }
+                              },
+                            ),
+                            StreamBuilder(
+                              stream: APIs.getMyUsersId(),
+
+                              //get id of only know user
+                              builder: (context, snapshot) {
+                                switch (snapshot.connectionState) {
+                                  //if data is loading
+                                  case ConnectionState.waiting:
+                                  case ConnectionState.none:
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+
+                                  //if some or all data is loaded then show it
+                                  case ConnectionState.active:
+                                  case ConnectionState.done:
+                                    return StreamBuilder(
+                                      stream: APIs.getAllUsers(snapshot
+                                              .data?.docs
+                                              .map((e) => e.id)
+                                              .toList() ??
+                                          []),
+
+                                      //get only those user, who's ids are provide
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          //if data is loading
+                                          case ConnectionState.waiting:
+                                          case ConnectionState.none:
+                                            return const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            );
+
+                                          //if some or all data is loaded then show it
+                                          case ConnectionState.active:
+                                          case ConnectionState.done:
+                                            final data = snapshot.data?.docs;
+                                            _list = data
+                                                    ?.map((e) =>
+                                                        ChatUser.fromJson(
+                                                            e.data()))
+                                                    .toList() ??
+                                                [];
+
+                                            if (_list.isNotEmpty) {
+                                              return ListView.builder(
+                                                itemCount: _list.length,
+                                                physics:
+                                                    BouncingScrollPhysics(),
+                                                itemBuilder: (context, index) {
+                                                  return CallUserCard(
+                                                      user: _list[index]);
+                                                },
+                                              );
+                                            } else {
+                                              return const Center(
+                                                  child: Text(
+                                                      'No Connections Found',
+                                                      style: TextStyle(
+                                                          fontSize: 20)));
+                                            }
+                                        }
+                                      },
+                                    );
+                                }
+                              },
+                            ),
+                            
                           ],
                           // controller: _tabController,
                         ),
