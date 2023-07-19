@@ -267,18 +267,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   //       color: Color(0xFF5E88DA),
                   //       size: 36,
                   //     )),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(context,MaterialPageRoute(builder: (context) => GroupMemberScreen()),);
-                      },
-                      icon: const Icon(
-                        Icons.group_add,
-                        color: Color(0xFF5E88DA),
-                        size: 30,
-                      )),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  // IconButton(
+                  //     onPressed: () {
+                  //       Navigator.push(context,MaterialPageRoute(builder: (context) => GroupMemberScreen()),);
+                  //     },
+                  //     icon: const Icon(
+                  //       Icons.group_add,
+                  //       color: Color(0xFF5E88DA),
+                  //       size: 30,
+                  //     )),
+                  // const SizedBox(
+                  //   width: 10,
+                  // ),
                 ],
               );
             },

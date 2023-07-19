@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:we_chat/widgets/normal_user_card.dart';
 
 import '../api/apis.dart';
 import '../main.dart';
@@ -9,7 +11,8 @@ import '../models/chat_user.dart';
 import '../widgets/chat_user_card.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  final bool isHome;
+  const SearchScreen({super.key, required this.isHome});
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -22,7 +25,6 @@ class _SearchScreenState extends State<SearchScreen> {
   final List<ChatUser> _searchList = [];
   // for storing search status
   bool _isSearching = false;
-
   Timer? _debounce;
 
   final searchController = TextEditingController();
@@ -121,8 +123,9 @@ class _SearchScreenState extends State<SearchScreen> {
                   case ConnectionState.active:
                   case ConnectionState.done:
                     return StreamBuilder(
-                      stream: APIs.getAllUsers(
-                          snapshot.data?.docs.map((e) => e.id).toList() ?? []),
+                      stream: widget.isHome ? APIs.getAllUsers(
+                          snapshot.data?.docs.map((e) => e.id).toList() ?? []) :
+                          APIs.getUsers(snapshot.data?.docs.map((e) => e.id).toList() ?? []),
     
                       //get only those user, who's ids are provide
                       builder: (context, snapshot) {
@@ -151,7 +154,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                       EdgeInsets.only(top: mq.height * .01),
                                   physics: BouncingScrollPhysics(),
                                   itemBuilder: (context, index) {
-                                    return ChatUserCard(user: _list[index]);
+                                    return widget.isHome ? ChatUserCard(
+                                        user: _list[index]) : NormalUserCard(user: _list[index]);
                                   },
                                 );
                               } else {
@@ -162,8 +166,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                         EdgeInsets.only(top: mq.height * .01),
                                     physics: BouncingScrollPhysics(),
                                     itemBuilder: (context, index) {
-                                      return ChatUserCard(
-                                          user: _searchList[index]);
+                                      return widget.isHome ? ChatUserCard(
+                                          user: _searchList[index]) : NormalUserCard(user: _searchList[index]);
                                     },
                                   );
                                 } else {

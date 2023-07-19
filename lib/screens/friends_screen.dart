@@ -39,7 +39,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-        length: 3, 
+        length: 2,
         child: Scaffold(
           backgroundColor: Colors.white,
           body: Column(
@@ -67,13 +67,13 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   ),
                     ),
-                    Tab(
-                      // text: 'Away (${countAway})',
-                      child: Text('Away (${countAway})', 
-                                  style:TextStyle(color: Color.fromRGBO(255, 165, 0, 1)),
-                                  overflow: TextOverflow.ellipsis,
-                                  ),
-                    )
+                    // Tab(
+                    //   // text: 'Away (${countAway})',
+                    //   child: Text('Away (${countAway})',
+                    //               style:TextStyle(color: Color.fromRGBO(255, 165, 0, 1)),
+                    //               overflow: TextOverflow.ellipsis,
+                    //               ),
+                    // )
                   ],
                   // controller: _tabController,
                   indicatorSize: TabBarIndicatorSize.label,
@@ -104,7 +104,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                               user: listBusy[index]);
                         },
                       ),
-                      Text("123"),
+                      // Text("123"),
                     ],
                     // controller: _tabController,
                   ),

@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
         },
         child: SafeArea(
           child: DefaultTabController(
-            length: 3,
+            length: 2,
             child: Scaffold(
                 backgroundColor: Colors.white,
                 //app bar
@@ -102,9 +102,9 @@ class _HomeScreenState extends State<HomeScreen>
                           Tab(
                             text: 'Friends',
                           ),
-                          Tab(
-                            text: 'Calls',
-                          )
+                          // Tab(
+                          //   text: 'Calls',
+                          // )
                         ],
                         // controller: _tabController,
                         indicatorSize: TabBarIndicatorSize.label,
@@ -245,74 +245,74 @@ class _HomeScreenState extends State<HomeScreen>
                                 }
                               },
                             ),
-                            StreamBuilder(
-                              stream: APIs.getMyUsersId(),
-
-                              //get id of only know user
-                              builder: (context, snapshot) {
-                                switch (snapshot.connectionState) {
-                                  //if data is loading
-                                  case ConnectionState.waiting:
-                                  case ConnectionState.none:
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-
-                                  //if some or all data is loaded then show it
-                                  case ConnectionState.active:
-                                  case ConnectionState.done:
-                                    return StreamBuilder(
-                                      stream: APIs.getAllUsers(snapshot
-                                              .data?.docs
-                                              .map((e) => e.id)
-                                              .toList() ??
-                                          []),
-
-                                      //get only those user, who's ids are provide
-                                      builder: (context, snapshot) {
-                                        switch (snapshot.connectionState) {
-                                          //if data is loading
-                                          case ConnectionState.waiting:
-                                          case ConnectionState.none:
-                                            return const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
-                                            );
-
-                                          //if some or all data is loaded then show it
-                                          case ConnectionState.active:
-                                          case ConnectionState.done:
-                                            final data = snapshot.data?.docs;
-                                            _list = data
-                                                    ?.map((e) =>
-                                                        ChatUser.fromJson(
-                                                            e.data()))
-                                                    .toList() ??
-                                                [];
-
-                                            if (_list.isNotEmpty) {
-                                              return ListView.builder(
-                                                itemCount: _list.length,
-                                                physics:
-                                                    BouncingScrollPhysics(),
-                                                itemBuilder: (context, index) {
-                                                  return CallUserCard(
-                                                      user: _list[index]);
-                                                },
-                                              );
-                                            } else {
-                                              return const Center(
-                                                  child: Text(
-                                                      'No Connections Found',
-                                                      style: TextStyle(
-                                                          fontSize: 20)));
-                                            }
-                                        }
-                                      },
-                                    );
-                                }
-                              },
-                            ),
+                            // StreamBuilder(
+                            //   stream: APIs.getMyUsersId(),
+                            //
+                            //   //get id of only know user
+                            //   builder: (context, snapshot) {
+                            //     switch (snapshot.connectionState) {
+                            //       //if data is loading
+                            //       case ConnectionState.waiting:
+                            //       case ConnectionState.none:
+                            //         return const Center(
+                            //           child: CircularProgressIndicator(),
+                            //         );
+                            //
+                            //       //if some or all data is loaded then show it
+                            //       case ConnectionState.active:
+                            //       case ConnectionState.done:
+                            //         return StreamBuilder(
+                            //           stream: APIs.getAllUsers(snapshot
+                            //                   .data?.docs
+                            //                   .map((e) => e.id)
+                            //                   .toList() ??
+                            //               []),
+                            //
+                            //           //get only those user, who's ids are provide
+                            //           builder: (context, snapshot) {
+                            //             switch (snapshot.connectionState) {
+                            //               //if data is loading
+                            //               case ConnectionState.waiting:
+                            //               case ConnectionState.none:
+                            //                 return const Center(
+                            //                   child:
+                            //                       CircularProgressIndicator(),
+                            //                 );
+                            //
+                            //               //if some or all data is loaded then show it
+                            //               case ConnectionState.active:
+                            //               case ConnectionState.done:
+                            //                 final data = snapshot.data?.docs;
+                            //                 _list = data
+                            //                         ?.map((e) =>
+                            //                             ChatUser.fromJson(
+                            //                                 e.data()))
+                            //                         .toList() ??
+                            //                     [];
+                            //
+                            //                 if (_list.isNotEmpty) {
+                            //                   return ListView.builder(
+                            //                     itemCount: _list.length,
+                            //                     physics:
+                            //                         BouncingScrollPhysics(),
+                            //                     itemBuilder: (context, index) {
+                            //                       return CallUserCard(
+                            //                           user: _list[index]);
+                            //                     },
+                            //                   );
+                            //                 } else {
+                            //                   return const Center(
+                            //                       child: Text(
+                            //                           'No Connections Found',
+                            //                           style: TextStyle(
+                            //                               fontSize: 20)));
+                            //                 }
+                            //             }
+                            //           },
+                            //         );
+                            //     }
+                            //   },
+                            // ),
                             
                           ],
                           // controller: _tabController,
@@ -401,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen>
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => SearchScreen()));
+            context, MaterialPageRoute(builder: (_) => SearchScreen(isHome: true)));
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -9,6 +9,7 @@ import 'package:we_chat/models/message.dart';
 import 'package:we_chat/screens/chat_screen.dart';
 import 'package:we_chat/widgets/dialogs/profile_dialog.dart';
 import 'package:we_chat/screens/search_screen.dart';
+import 'package:we_chat/widgets/normal_user_card.dart';
 import 'package:we_chat/widgets/user_card.dart';
 
 
@@ -36,8 +37,6 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -55,9 +54,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
           }
         },
         child: SafeArea(
-          child: DefaultTabController(
-            length: 3,
-            child: Scaffold(
+          child: Scaffold(
                 backgroundColor: Colors.white,
                 //app bar
                 body: Column(
@@ -66,30 +63,29 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                         margin:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                         child: _searchBtn()),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 20),
-                      child: TabBar(
-                        unselectedLabelColor: Colors.black,
-                        labelColor: Color(0xFF5E88DA),
-                        unselectedLabelStyle: TextStyle(fontFamily: 'Poppins', fontSize: 18),
-                        labelStyle:
-                            TextStyle(fontFamily: 'PoppinsSemiBold', fontSize: 18),
-                        tabs: [
-                          Tab(
-                            text: 'Add Friends',
-                          ),
-                        ],
-                        // controller: _tabController,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        indicatorColor: Color(0xFFF1F1F1),
-                        indicatorWeight: 4,
-                        indicatorPadding: EdgeInsets.symmetric(vertical: 8),
-                      ),
-                    ),
+                    // Container(
+                    //   margin: EdgeInsets.symmetric(horizontal: 20),
+                    //   child: TabBar(
+                    //     unselectedLabelColor: Colors.black,
+                    //     labelColor: Color(0xFF5E88DA),
+                    //     unselectedLabelStyle: TextStyle(fontFamily: 'Poppins', fontSize: 18),
+                    //     labelStyle:
+                    //         TextStyle(fontFamily: 'PoppinsSemiBold', fontSize: 18),
+                    //     tabs: [
+                    //       Tab(
+                    //         text: 'Add Friends',
+                    //       ),
+                    //     ],
+                    //     // controller: _tabController,
+                    //     indicatorSize: TabBarIndicatorSize.label,
+                    //     indicatorColor: Color(0xFFF1F1F1),
+                    //     indicatorWeight: 4,
+                    //     indicatorPadding: EdgeInsets.symmetric(vertical: 8),
+                    //   ),
+                    // ),
                     Expanded(
                       child: Container(
-                        child: TabBarView(
-                          children: [
+                        child: 
                             StreamBuilder(
                               stream: APIs.getMyUsersId(),
 
@@ -141,7 +137,7 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                                 physics:
                                                     BouncingScrollPhysics(),
                                                 itemBuilder: (context, index) {
-                                                  return UserCard(
+                                                  return NormalUserCard(
                                                       user: _list[index]);
                                                 },
                                               );
@@ -159,14 +155,10 @@ class _AddFriendsScreenState extends State<AddFriendsScreen> {
                                 }
                               },
                             ),
-                          ],
-                          // controller: _tabController,
-                        ),
                       ),
                     ),
                   ],
                 )),
-          ),
         ),
       ),
     );
@@ -175,7 +167,7 @@ Widget _searchBtn() {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (_) => SearchScreen()));
+            context, MaterialPageRoute(builder: (_) => SearchScreen(isHome: false)));
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),

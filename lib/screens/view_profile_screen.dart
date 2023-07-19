@@ -135,8 +135,8 @@ void initState() {
                                  Navigator.pop(context);
                                    if (widget.user.email.isNotEmpty) {
                                       APIs.addChatUser(widget.user.email).then((value) {
-                                          if (!value) {
-                                          Dialogs.showSnackbar(context, 'Error');
+                                          if (value) {
+                                          Dialogs.showSnackbar(context, 'Đã thêm vào' + widget.user.name +'danh sách bạn bè');
                                          }
                                          else {
                                            setState(() {
