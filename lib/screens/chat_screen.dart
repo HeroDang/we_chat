@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/models/chat_user.dart';
 import 'package:we_chat/models/message.dart';
+import 'package:we_chat/screens/group_member_screen.dart';
 import 'package:we_chat/screens/view_profile_screen.dart';
 
 import '../../api/apis.dart';
@@ -258,17 +259,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       ],
                     ),
                   ),
+                  // IconButton(
+                  //     onPressed: () {},
+                  //     icon: const Icon(
+                  //       CupertinoIcons.video_camera,
+                  //       color: Color(0xFF5E88DA),
+                  //       size: 36,
+                  //     )),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context,MaterialPageRoute(builder: (context) => GroupMemberScreen()),);
+                      },
                       icon: const Icon(
-                        CupertinoIcons.video_camera,
-                        color: Color(0xFF5E88DA),
-                        size: 36,
-                      )),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        CupertinoIcons.phone,
+                        CupertinoIcons.group,
                         color: Color(0xFF5E88DA),
                         size: 30,
                       )),
