@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
+
+import '../api/apis.dart';
+import '../helper/dialog.dart';
 // import 'package:we_chat/screens/button_contact.dart';
 
 //view profiles screen -- to view profile of user
 class ViewProfileScreen extends StatefulWidget {
   final ChatUser user;
+  final bool contact ;
 
-  const ViewProfileScreen({super.key, required this.user});
+
+  const ViewProfileScreen({super.key, required this.user, required this.contact});
 
   @override
   State<ViewProfileScreen> createState() => _ViewProfileScreenState();
@@ -18,11 +23,11 @@ class ViewProfileScreen extends StatefulWidget {
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
   bool _isContacted = false;
-  bool _showContacted = false;
+  // bool _showContacted = false;
   @override
 void initState() {
   super.initState();
-  // _isContacted = true;
+  _isContacted = widget.contact;
 }
   @override
   Widget build(BuildContext context) {
@@ -115,7 +120,7 @@ void initState() {
                   Row(
                        mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                           _showContacted
+                           _isContacted
                             ? Text(
                               'Contacted',
                                style: TextStyle(
@@ -125,13 +130,24 @@ void initState() {
                                   ),
                                )
                             : ElevatedButton(
-                           onPressed: () {
-                            bool showContacted = !_isContacted;
-                            setState(() {
-                            _isContacted = true;
-                            _showContacted = showContacted;
-                        });
-                       },
+                              onPressed: () async {
+                    //Add contact
+                                 Navigator.pop(context);
+                                   if (widget.user.email.isNotEmpty) {
+                                      APIs.addChatUser(widget.user.email).then((value) {
+                                          if (!value) {
+                                          Dialogs.showSnackbar(context, 'Error');
+                                         }
+                                         else {
+                                           setState(() {
+                                           _isContacted = !_isContacted;
+                                          // _showContacted = showContacted;
+                                      });
+                                         }
+                                        });
+                                       }
+                                    },
+                            // bool showContacted = !_isContacted;
                          child: Text('Add Contact'),
                         ),
                       ],

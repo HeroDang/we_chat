@@ -61,7 +61,7 @@ class ProfileDialog extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => ViewProfileScreen(user: user)));
+                          builder: (_) => ViewProfileScreen(user: user, contact: true,)));
                 },
                 minWidth: 0,
                 padding: EdgeInsets.all(0),
