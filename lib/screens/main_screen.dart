@@ -16,6 +16,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     Text(

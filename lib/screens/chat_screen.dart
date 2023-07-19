@@ -215,7 +215,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
 
                   // user name and last seen time
-                  Flexible(
+                  Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +271,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         Navigator.push(context,MaterialPageRoute(builder: (context) => GroupMemberScreen()),);
                       },
                       icon: const Icon(
-                        CupertinoIcons.group,
+                        Icons.group_add,
                         color: Color(0xFF5E88DA),
                         size: 30,
                       )),
