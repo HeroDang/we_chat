@@ -5,22 +5,44 @@ import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
 
+import '../api/apis.dart';
+import '../helper/dialog.dart';
+// import 'package:we_chat/screens/button_contact.dart';
+
 //view profiles screen -- to view profile of user
 class ViewProfileScreen extends StatefulWidget {
   final ChatUser user;
+  final bool contact ;
 
-  const ViewProfileScreen({super.key, required this.user});
+
+  const ViewProfileScreen({super.key, required this.user, required this.contact});
 
   @override
   State<ViewProfileScreen> createState() => _ViewProfileScreenState();
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
+  bool _isContacted = false;
+  // bool _showContacted = false;
+  @override
+void initState() {
+  super.initState();
+  _isContacted = widget.contact;
+}
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       // for hiding keyboard
-      onTap: () => FocusScope.of(context).unfocus(),
+      // onTap: () => FocusScope.of(context).unfocus(),
+      onTap: (){
+        if (!_isContacted) {
+          // Nếu người dùng chưa được kết bạn, xử lý sự kiện click trên button ở đây
+          setState(() {
+            _isContacted = true;
+          });
+        }
+
+      },
 
       child: Scaffold(
           //app bar
@@ -95,6 +117,41 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                               TextStyle(color: Colors.black54, fontSize: 16)),
                     ],
                   ),
+                  Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                           _isContacted
+                            ? Text(
+                              'Contacted',
+                               style: TextStyle(
+                                  color: Colors.teal,
+                                   fontWeight: FontWeight.bold,
+                                   fontSize: 16,
+                                  ),
+                               )
+                            : ElevatedButton(
+                              onPressed: () async {
+                    //Add contact
+                                 Navigator.pop(context);
+                                   if (widget.user.email.isNotEmpty) {
+                                      APIs.addChatUser(widget.user.email).then((value) {
+                                          if (!value) {
+                                          Dialogs.showSnackbar(context, 'Error');
+                                         }
+                                         else {
+                                           setState(() {
+                                           _isContacted = !_isContacted;
+                                          // _showContacted = showContacted;
+                                      });
+                                         }
+                                        });
+                                       }
+                                    },
+                            // bool showContacted = !_isContacted;
+                         child: Text('Add Contact'),
+                        ),
+                      ],
+               ),
                 ],
               ),
             ),
