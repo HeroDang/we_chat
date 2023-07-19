@@ -169,6 +169,20 @@ class APIs {
         .snapshots();
   }
 
+    //not for getting all users from firestore  database
+static Stream<QuerySnapshot<Map<String, dynamic>>> getUsers(
+      List<String> userIds) {
+    log('\nUserIds: $userIds');
+    return firestore
+        .collection('users')
+        .where('id',
+            whereNotIn: userIds.isEmpty
+                ? ['']
+                : userIds) //because empty list throws an error
+        // .where('id', isNotEqualTo: user.uid)
+        .snapshots();
+  }
+
   //for adding an user to my user when first message is send
   static Future<void> sendFirstMessage(
       ChatUser chatUser, String msg, Type type) async {

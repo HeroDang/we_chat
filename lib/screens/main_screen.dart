@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:we_chat/screens/home_screen.dart';
 import 'package:we_chat/screens/profile_screen.dart';
+import 'package:we_chat/screens/add_friends_screen.dart';
 
 import '../api/apis.dart';
 
@@ -18,10 +20,7 @@ class _MainScreenState extends State<MainScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    AddFriendsScreen(),
     ProfileScreen(user: APIs.me),
   ];
 
