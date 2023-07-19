@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:we_chat/helper/my_date_util.dart';
 import 'package:we_chat/main.dart';
 import 'package:we_chat/models/chat_user.dart';
+// import 'package:we_chat/screens/button_contact.dart';
 
 //view profiles screen -- to view profile of user
 class ViewProfileScreen extends StatefulWidget {
@@ -16,11 +17,27 @@ class ViewProfileScreen extends StatefulWidget {
 }
 
 class _ViewProfileScreenState extends State<ViewProfileScreen> {
+  bool _isContacted = false;
+  bool _showContacted = false;
+  @override
+void initState() {
+  super.initState();
+  // _isContacted = true;
+}
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       // for hiding keyboard
-      onTap: () => FocusScope.of(context).unfocus(),
+      // onTap: () => FocusScope.of(context).unfocus(),
+      onTap: (){
+        if (!_isContacted) {
+          // Nếu người dùng chưa được kết bạn, xử lý sự kiện click trên button ở đây
+          setState(() {
+            _isContacted = true;
+          });
+        }
+
+      },
 
       child: Scaffold(
           //app bar
@@ -95,6 +112,30 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                               TextStyle(color: Colors.black54, fontSize: 16)),
                     ],
                   ),
+                  Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                           _showContacted
+                            ? Text(
+                              'Contacted',
+                               style: TextStyle(
+                                  color: Colors.teal,
+                                   fontWeight: FontWeight.bold,
+                                   fontSize: 16,
+                                  ),
+                               )
+                            : ElevatedButton(
+                           onPressed: () {
+                            bool showContacted = !_isContacted;
+                            setState(() {
+                            _isContacted = true;
+                            _showContacted = showContacted;
+                        });
+                       },
+                         child: Text('Add Contact'),
+                        ),
+                      ],
+               ),
                 ],
               ),
             ),

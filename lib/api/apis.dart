@@ -154,6 +154,17 @@ class APIs {
         .collection('my_users')
         .snapshots();
   }
+ static Future<List<String>> getMyUsersListId() async {
+  final querySnapshot = await firestore
+      .collection('users')
+      .doc(user.uid)
+      .collection('my_users')
+      .get();
+
+  final userIds = querySnapshot.docs.map((doc) => doc.id).toList();
+
+  return userIds;
+}
 
   //for getting all users from firestore  database
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllUsers(
