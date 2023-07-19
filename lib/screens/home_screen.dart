@@ -81,17 +81,6 @@ class _HomeScreenState extends State<HomeScreen>
             child: Scaffold(
                 backgroundColor: Colors.white,
                 //app bar
-
-                //floating button to add new user
-                floatingActionButton: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      _addChatUserDialog();
-                    },
-                    child: const Icon(Icons.add_comment_rounded),
-                  ),
-                ),
                 body: Column(
                   children: [
                     Container(

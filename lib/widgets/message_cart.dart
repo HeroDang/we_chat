@@ -12,14 +12,25 @@ import 'package:we_chat/models/message.dart';
 
 class MessageCard extends StatefulWidget {
   final Message message;
+  final Message preMessage;
 
-  const MessageCard({super.key, required this.message});
+
+
+  const MessageCard({super.key, required this.message, required this.preMessage});
 
   @override
   State<MessageCard> createState() => _MessageCardState();
 }
 
 class _MessageCardState extends State<MessageCard> {
+  late int difference;
+  @override
+  void initState(){
+    difference = int.parse(widget.message.sent) - int.parse(widget.preMessage.sent);
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     bool isMe = APIs.user.uid == widget.message.fromId;
@@ -86,7 +97,8 @@ class _MessageCardState extends State<MessageCard> {
             )),
 
         //message time
-        Container(
+        
+         Container(
           decoration: BoxDecoration(
               color: Color(0xFFF1F1F1), borderRadius: BorderRadius.circular(7)),
           padding: EdgeInsets.all(4),
@@ -97,6 +109,8 @@ class _MessageCardState extends State<MessageCard> {
             style: const TextStyle(fontSize: 13, color: Colors.black54),
           ),
         ),
+
+       
       ]),
     );
 
@@ -208,7 +222,8 @@ class _MessageCardState extends State<MessageCard> {
 
           ////message time
           UnconstrainedBox(
-            child: Container(
+            child: 
+            Container(
               decoration: BoxDecoration(
                   color: Color(0xFFF1F1F1),
                   borderRadius: BorderRadius.circular(7)),

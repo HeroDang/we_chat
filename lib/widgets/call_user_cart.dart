@@ -55,7 +55,7 @@ class _CallUserCardState extends State<CallUserCard> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => ViewProfileScreen(user: widget.user)));
+                      builder: (_) => ViewProfileScreen(user: widget.user, contact: true,)));
             },
             child: StreamBuilder(
               stream: APIs.getLastMessage(widget.user),

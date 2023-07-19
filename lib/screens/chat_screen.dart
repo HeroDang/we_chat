@@ -98,6 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               itemBuilder: (context, index) {
                                 return MessageCard(
                                   message: _list[index],
+                                   preMessage:  index>0 ? _list[index-1]: _list[index],
                                 );
                               },
                             );
@@ -168,7 +169,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => ViewProfileScreen(user: widget.user)));
+                    builder: (_) => ViewProfileScreen(user: widget.user,contact: true,)));
           },
           child: StreamBuilder(
             stream: APIs.getUserInfo(widget.user),
