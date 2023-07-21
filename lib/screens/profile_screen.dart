@@ -27,6 +27,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _image;
 
+  late ChatUser _user;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    APIs.getSelfInfo();
+    setState(() {
+      _user = APIs.me;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -109,7 +121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 width: mq.height * .2,
                                 height: mq.height * .2,
                                 fit: BoxFit.cover,
-                                imageUrl: widget.user.image,
+                                imageUrl: _user.image,
                                 errorWidget: (context, url, error) =>
                                     const CircleAvatar(
                                   child: Icon(CupertinoIcons.person),
@@ -139,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     //for adding some space
                     SizedBox(height: mq.height * .03),
 
-                    Text(widget.user.email,
+                    Text(_user.email,
                         style: TextStyle(color: Colors.black54, fontSize: 16)),
 
                     //for adding some space
@@ -147,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     //name input field
                     TextFormField(
-                      initialValue: widget.user.name,
+                      initialValue: _user.name,
                       onSaved: (val) => APIs.me.name = val ?? '',
                       validator: (val) => val != null && val.isNotEmpty
                           ? null
@@ -168,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     //about input field
                     TextFormField(
-                      initialValue: widget.user.about,
+                      initialValue: _user.about,
                       onSaved: (val) => APIs.me.about = val ?? '',
                       validator: (val) => val != null && val.isNotEmpty
                           ? null

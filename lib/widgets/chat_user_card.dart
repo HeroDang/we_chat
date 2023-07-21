@@ -154,18 +154,18 @@ class _ChatUserCardState extends State<ChatUserCard> {
                                   Container(
                                     alignment: Alignment.center,
                                     child: Text(
-                                      (unreadMessageCount - 1) <= 9
-                                          ? (unreadMessageCount - 1).toString()
-                                          : (unreadMessageCount - 1) <= 20
-                                              ? '9+'
-                                              : 'N',
+                                      (unreadMessageCount) <= 9
+                                          ? ''
+                                          : (unreadMessageCount) <= 20
+                                              ? ''
+                                              : '',
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontFamily: 'PoppinsRegular',
                                           color: Color(0xFFF5EDED)),
                                     ),
-                                    width: 26,
-                                    height: 26,
+                                    width: 16,
+                                    height: 16,
                                     decoration: BoxDecoration(
                                         color: Color(0xFF5E88DA),
                                         borderRadius:

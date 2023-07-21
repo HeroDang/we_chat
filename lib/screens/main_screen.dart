@@ -27,6 +27,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _onItemTapped(int index) {
     setState(() {
+      APIs.getSelfInfo();
       _selectedIndex = index;
     });
   }
